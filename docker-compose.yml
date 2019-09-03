@@ -1,0 +1,11 @@
+version: '3'
+services:
+  asciidoctor:
+    image: rhizome/asciidoctor
+    build:
+      context: docker-asciidoctor
+    container_name: asciidoctor
+    volumes:
+      - ./:/documents
+    command: bash
+    tty: yes
