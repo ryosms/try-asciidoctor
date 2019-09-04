@@ -14,8 +14,10 @@ jobs:
 
       - name: Make PDF
         run: |
+          mkdir -p /home/runner/work/pdf
           docker-compose build
           docker-compose run asciidoctor make pdf
+          cp out/pdf/*.pdf /home/runner/work/pdf
 
       - name: setup Go
         uses: actions/setup-go@v1
@@ -31,4 +33,4 @@ jobs:
         run: |
           go get -u github.com/tcnksm/ghr
           export TAGNAME=$(jq --raw-output .ref "${GITHUB_EVENT_PATH}")
-          ${GOPATH}/bin/ghr -n ${TAGNAME} -b "${TAGNAME}" -draft ${TAGNAME} out/pdf/*.pdf
+          ${GOPATH}/bin/ghr -n ${TAGNAME} -b "${TAGNAME}" -draft ${TAGNAME} /home/runner/work/pdf/
