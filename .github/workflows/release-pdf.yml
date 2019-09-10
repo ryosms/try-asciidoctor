@@ -1,36 +1,36 @@
 name: Rlease PDF files
 on:
-  create:
+  push:
     tags:
-      - v*.*.*
+      - "v*"
 
 jobs:
   release-pdf:
-    name: Release PDF
+    name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@master
-
-      - name: Make PDF
-        run: |
-          mkdir -p /home/runner/work/pdf
-          docker-compose build
-          docker-compose run asciidoctor make pdf
-          cp out/pdf/*.pdf /home/runner/work/pdf
+        uses: actions/checkout@v1
 
       - name: setup Go
         uses: actions/setup-go@v1
         with:
-          version: 1.12
+          version: 1.13
         id: go
 
-      - name: Create relase
+      - name: Make and release
         env:
           GO111MODULE: on
           GOPATH: /home/runner/work
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -xe
+          mkdir -p /home/runner/work/pdf
+          docker-compose build
+          docker-compose run asciidoctor make pdf
+          cp out/pdf/*.pdf /home/runner/work/pdf
+
+          export GOPATH=`go env GOPATH`
           go get -u github.com/tcnksm/ghr
           export TAGNAME=$(jq --raw-output .ref "${GITHUB_EVENT_PATH}")
           ${GOPATH}/bin/ghr -n ${TAGNAME} -b "${TAGNAME}" -draft ${TAGNAME} /home/runner/work/pdf/
