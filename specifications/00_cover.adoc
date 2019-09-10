@@ -1,0 +1,19 @@
+:encoding: utf-8
+:lang: ja
+:doctitle: サンプルプロジェクト: 詳細設計書
+:doctype: book
+:toc: left
+
+= {doctitle}
+
+== 改訂履歴
+
+[cols="1,2,2,5", options="header"]
+|===
+| No. | 改訂日 | 改訂者 | 改訂内容
+
+| 1. | 2001/02/03 | Example
+| 初版発行
+|===
+
+include::01_login.adoc[]
